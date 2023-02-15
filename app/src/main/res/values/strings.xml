@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">CarControl</string>
+    <string name="ip_address">IP Address</string>
+    <string name="port">Port</string>
+    <string name='default_url'>192.168.172.26</string>
+    <string name="err_invalid_port">Enter a valid Port</string>
+    <string name="err_invalid_ip">Enter a valid IP Address</string>
+    <string name="err_unknown_host">cannot find hostname</string>
+    <string name="err_general">unknown error occurred</string>
+    <string name="label_speed">Speed: %s</string>
+    <string name="label_servo">Servo: %s</string>
+    <string name="label_talkingTo">Talking to: ip: %s port: %s</string>
+    <string name="label_greetings">Enter IP and Port:</string>
+
+    <string name="button_neutral">Neutral</string>
+    <string name="button_continue">Continue</string>
+</resources>
