@@ -1,4 +1,4 @@
-package de.buecherregale.carcontrol
+package de.buecherregale.carcontrol.activities
 
 import android.content.Intent
 import android.net.InetAddresses
@@ -7,12 +7,15 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import com.google.gson.Gson
+import de.buecherregale.carcontrol.R
 import de.buecherregale.carcontrol.listener.TextEditListener
 import java.io.File
 
-data class Config(val ip: String, val port: Int)
+
 
 class MainActivity : AppCompatActivity() {
+
+    data class Config(val ip: String, val port: Int)
 
     private val cfgName: String = "cfg.json"
 

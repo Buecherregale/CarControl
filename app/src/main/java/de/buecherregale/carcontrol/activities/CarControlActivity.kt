@@ -1,12 +1,13 @@
 @file:Suppress("UNCHECKED_CAST")
 
-package de.buecherregale.carcontrol
+package de.buecherregale.carcontrol.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.SeekBar
 import android.widget.TextView
+import de.buecherregale.carcontrol.R
 import de.buecherregale.carcontrol.api.*
 import de.buecherregale.carcontrol.exception.ExceptionHandler
 import de.buecherregale.carcontrol.listener.BarSlideListener
