@@ -50,12 +50,12 @@ class MainActivity : AppCompatActivity() {
             // validation
             if(validate(ip, port)) {
                 writeCfg(ip, port.toInt())
+                // open next activity
+                val intent = Intent(this, TiltControl::class.java)
+                intent.putExtra("ip", ip)
+                intent.putExtra("port", port)
+                startActivity(intent)
             }
-            // open next activity
-            val intent = Intent(this, CarControlActivity::class.java)
-            intent.putExtra("ip", ip)
-            intent.putExtra("port", port)
-            startActivity(intent)
         }
 
         // clear the default strings when entering

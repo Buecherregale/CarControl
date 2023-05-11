@@ -1,20 +1,17 @@
 package de.buecherregale.carcontrol.activities
 
-import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MotionEvent
+import android.util.Log
 import android.widget.Button
 import de.buecherregale.carcontrol.R
 import de.buecherregale.carcontrol.api.CarControlService
 import de.buecherregale.carcontrol.api.Constants
 import de.buecherregale.carcontrol.api.RestApiController
-import de.buecherregale.carcontrol.api.Speed
+import de.buecherregale.carcontrol.exception.ExceptionHandler
+import de.buecherregale.carcontrol.tilting.gascontrol.SpeedController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 class TiltControl : AppCompatActivity() {
@@ -24,13 +21,22 @@ class TiltControl : AppCompatActivity() {
 
     private lateinit var constants: Constants
 
-    private var currentSpeed = 0
+    private lateinit var speedController: SpeedController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tilt_control)
+        Thread.setDefaultUncaughtExceptionHandler(ExceptionHandler(this))
 
-        apiController = RestApiController(RestApiController.buildURL("", 3))
+        Log.d("Tilt", "changed activity to TiltControl")
+
+        val ip = intent.getStringExtra("ip")!!
+        val port = intent.getStringExtra("port")!!.toInt()
+        val url = RestApiController.buildURL(ip, port)
+
+        Log.d("API", "connecting to url from intent: $url")
+
+        apiController = RestApiController(RestApiController.buildURL(ip, port))
         service = apiController.getService()
 
         val gasBtn = findViewById<Button>(R.id.gas)
@@ -38,62 +44,12 @@ class TiltControl : AppCompatActivity() {
         val clutchBtn = findViewById<Button>(R.id.clutch)
 
         CoroutineScope(Dispatchers.Main).launch {
+            Log.d("API", "fetching constants")
             constants = service.getConstants()
-            currentSpeed = constants.speedCenter
-        }
-    }
-
-    private suspend fun whileGasDown(changePerDelay: Int) {
-        var target = currentSpeed + changePerDelay
-        if(target > constants.speedCenter + constants.speedOffset) {
-            target = constants.speedCenter + constants.speedOffset
-        }
-        updateSpeed(target)
-    }
-
-    private suspend fun whileGasUp(changePerDelay: Int) {
-
-    }
-
-    private suspend fun updateSpeed(newValue: Int) {
-        service.postSpeed(Speed(newValue))
-    }
-
-    @SuppressLint("ClickableViewAccessibility") // keiner von uns ist blind
-            /**
-             * @param button the button to register and setup the listener for
-             * @param delay amount of milliseconds between each update and call of repeat()
-             * @param whileButtonDown the function to call while the button is hold down, suspend to allow api calls
-             * @param whileButtonUp the function to call while the button is up
-             */
-    fun setupButtonTouchListener(button: Button, delay: Long, whileButtonDown: suspend () -> Unit, whileButtonUp: suspend() -> Unit) {
-        var buttonDownJob: Job? = null
-        var buttonUpJob: Job? = null
-        button.setOnTouchListener {v, event ->
-            when(event?.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    buttonUpJob?.cancel()
-                    buttonDownJob = CoroutineScope(Dispatchers.Main).launch {
-                        while(isActive) {
-                            delay(delay)
-                            whileButtonDown()
-                        }
-                    }
-                    true
-                }
-                MotionEvent.ACTION_UP -> {
-                    v.performClick()
-                    buttonDownJob?.cancel()
-                    buttonUpJob = CoroutineScope(Dispatchers.Main).launch {
-                        while(isActive) {
-                            delay(delay)
-                            whileButtonUp()
-                        }
-                    }
-                    true
-                }
-                else -> false
-            }
+            Log.d("Tilt", "initialising speed controller")
+            speedController = SpeedController(url,  constants,
+                gas=gasBtn, breaking=breakBtn, clutch=clutchBtn, findViewById(R.id.currentSpeedText),
+                100, changePerDelay=constants.speedOffset / 4, breakPerDelay=constants.speedOffset / 2)
         }
     }
 }

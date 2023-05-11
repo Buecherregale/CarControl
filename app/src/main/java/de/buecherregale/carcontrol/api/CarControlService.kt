@@ -10,11 +10,8 @@ interface CarControlService {
     @POST("drive/servo")
     suspend fun postServo(@Body servo: Servo) : PostResponse
 
-    @GET("drive/speed")
-    suspend fun getSpeed() : Speed
-    @GET("drive/servo")
-    suspend fun getServo() : Servo
-
     @GET("drive/constants")
     suspend fun getConstants() : Constants
+
+    // no get methods for servo and speed exist
 }
