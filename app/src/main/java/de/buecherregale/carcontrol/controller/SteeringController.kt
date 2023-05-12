@@ -1,4 +1,4 @@
-package de.buecherregale.carcontrol.tilting.servocontrol
+package de.buecherregale.carcontrol.controller
 
 import de.buecherregale.carcontrol.api.Constants
 

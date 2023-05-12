@@ -9,7 +9,7 @@ import de.buecherregale.carcontrol.api.CarControlService
 import de.buecherregale.carcontrol.api.Constants
 import de.buecherregale.carcontrol.api.RestApiController
 import de.buecherregale.carcontrol.exception.ExceptionHandler
-import de.buecherregale.carcontrol.tilting.gascontrol.SpeedController
+import de.buecherregale.carcontrol.controller.SpeedController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

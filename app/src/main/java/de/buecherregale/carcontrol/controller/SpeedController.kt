@@ -1,4 +1,4 @@
-package de.buecherregale.carcontrol.tilting.gascontrol
+package de.buecherregale.carcontrol.controller
 
 import android.annotation.SuppressLint
 import android.util.Log
