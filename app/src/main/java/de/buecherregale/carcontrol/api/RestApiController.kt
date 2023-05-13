@@ -5,6 +5,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class RestApiController(private var url: String) {
+    // if true returns the service mock instead
+    // no connection to an actual api
+    private val test = true
 
     private lateinit var retrofit: Retrofit
     private lateinit var service: CarControlService
@@ -28,6 +31,7 @@ class RestApiController(private var url: String) {
     }
 
     fun getService() : CarControlService {
+        if(test) return CarControlServiceMock()
         if(!flagUrlChanged) return service
 
         service = getRetrofit().create(CarControlService::class.java)
@@ -37,15 +41,10 @@ class RestApiController(private var url: String) {
     fun handleCallError(ex: HttpException): String {
         val message = ex.message
         return when (val code = ex.code()) {
-            400 -> "$code: bad request: $message"
+            401 -> "$code: bad request: $message"
             404 -> "$code: not found: $message"
             500 -> "$code: internal server error: $message"
             else -> "$code: unknown http return: $message"
         }
-    }
-
-    fun setUrl(url: String) {
-        this.url = url
-        flagUrlChanged = true
     }
 }

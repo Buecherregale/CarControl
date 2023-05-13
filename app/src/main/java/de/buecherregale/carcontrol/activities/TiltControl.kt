@@ -9,7 +9,7 @@ import de.buecherregale.carcontrol.api.CarControlService
 import de.buecherregale.carcontrol.api.Constants
 import de.buecherregale.carcontrol.api.RestApiController
 import de.buecherregale.carcontrol.exception.ExceptionHandler
-import de.buecherregale.carcontrol.controller.SpeedController
+import de.buecherregale.carcontrol.controller.MotorController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,7 +21,7 @@ class TiltControl : AppCompatActivity() {
 
     private lateinit var constants: Constants
 
-    private lateinit var speedController: SpeedController
+    private lateinit var speedController: MotorController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,9 +47,9 @@ class TiltControl : AppCompatActivity() {
             Log.d("API", "fetching constants")
             constants = service.getConstants()
             Log.d("Tilt", "initialising speed controller")
-            speedController = SpeedController(url,  constants,
+            speedController = MotorController(url,  constants,
                 gas=gasBtn, breaking=breakBtn, clutch=clutchBtn, findViewById(R.id.currentSpeedText),
-                100, changePerDelay=constants.speedOffset / 4, breakPerDelay=constants.speedOffset / 2)
+                100, changePerDelay=constants.motorOffset / 4, breakPerDelay=constants.motorOffset / 2)
         }
     }
 }

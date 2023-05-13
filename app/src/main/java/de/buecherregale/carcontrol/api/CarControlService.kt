@@ -5,12 +5,12 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface CarControlService {
-    @POST("drive/speed")
-    suspend fun postSpeed(@Body speed: Speed) : PostResponse
-    @POST("drive/servo")
+    @POST("car_control/motor")
+    suspend fun postMotor(@Body motor: Motor) : PostResponse
+    @POST("car_control/servo")
     suspend fun postServo(@Body servo: Servo) : PostResponse
 
-    @GET("drive/constants")
+    @GET("car_control/constants")
     suspend fun getConstants() : Constants
 
     // no get methods for servo and speed exist

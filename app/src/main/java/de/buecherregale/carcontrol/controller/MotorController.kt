@@ -7,19 +7,22 @@ import android.widget.Button
 import android.widget.TextView
 import de.buecherregale.carcontrol.api.Constants
 import de.buecherregale.carcontrol.api.RestApiController
-import de.buecherregale.carcontrol.api.Speed
+import de.buecherregale.carcontrol.api.Motor
 import kotlinx.coroutines.*
 
 @SuppressLint("ClickableViewAccessibility")
-class SpeedController(url: String, constants: Constants,
+class MotorController(url: String, constants: Constants,
                       gas: Button, breaking: Button, clutch: Button,
                       private val currentSpeedText: TextView,
                       delay: Long, changePerDelay: Int, breakPerDelay: Int) {
 
     private val apiController = RestApiController(url)
 
-    private val speedCenter: Int = constants.speedCenter
-    private val speedOffset: Int = constants.speedOffset
+    private val motorCenter: Int = constants.motorCenter
+    private val motorOffset: Int = constants.motorOffset
+
+    private val motorMin: Int = motorCenter - motorOffset
+    private val motorMax: Int = motorCenter + motorOffset
 
     private var currentSpeed = 0
 
@@ -30,13 +33,13 @@ class SpeedController(url: String, constants: Constants,
     private var updateJob: Job? = null
 
     init {
-        Log.d("SpeedController", "requesting to: $url")
-        Log.d("SpeedController", """using: 
+        Log.d("MotorController", "requesting to: $url")
+        Log.d("MotorController", """using: 
             delay: $delay,
             changePerDelay: $changePerDelay,
             breakPerDelay: $breakPerDelay
         """.trimIndent())
-        Log.d("SpeedController", "setting up listener...")
+        Log.d("MotorController", "setting up listener...")
         gas.setOnTouchListener { view, motionEvent ->
              when(motionEvent.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -47,8 +50,9 @@ class SpeedController(url: String, constants: Constants,
                         updateJob = CoroutineScope(Dispatchers.Main).launch {
                             while(isActive) {
                                 delay(delay)
-                                Log.d("SpeedController", "iterate update job SPEED DOWN")
-                                changeSpeed(getSpeedInBounds(currentSpeed + changePerDelay))
+                                if(currentSpeed < motorMax) {
+                                    changeSpeed(getSpeedInBounds(currentSpeed + changePerDelay))
+                                }
                             }
                         }
                     }
@@ -62,8 +66,9 @@ class SpeedController(url: String, constants: Constants,
                         updateJob = CoroutineScope(Dispatchers.Main).launch {
                             while(isActive) {
                                 delay(delay)
-                                Log.d("SpeedController", "iterate update job SPEED IP")
-                                changeSpeed(getSpeedInBounds(currentSpeed - changePerDelay))
+                                if(currentSpeed > motorCenter) {
+                                    changeSpeed(getSpeedInBounds(currentSpeed - changePerDelay))
+                                }
                             }
                         }
                     }
@@ -81,12 +86,13 @@ class SpeedController(url: String, constants: Constants,
                     updateJob = CoroutineScope(Dispatchers.Main).launch {
                         while(isActive) {
                             delay(delay)
-                            var target = currentSpeed - breakPerDelay
-                            if (target < constants.speedCenter - constants.speedOffset) {
-                                target = constants.speedCenter - constants.speedOffset
+                            if(currentSpeed > motorMin) {
+                                var target = currentSpeed - breakPerDelay
+                                if (target < constants.motorCenter - constants.motorOffset) {
+                                    target = constants.motorCenter - constants.motorOffset
+                                }
+                                changeSpeed(target)
                             }
-
-                            changeSpeed(target)
                         }
                     }
                     true
@@ -104,23 +110,23 @@ class SpeedController(url: String, constants: Constants,
             updateJob?.cancel()
             clutchPressed = true
             CoroutineScope(Dispatchers.Main).launch {
-                changeSpeed(speedCenter)
+                changeSpeed(motorCenter)
             }
         }
-        Log.d("SpeedController", "listener setup completed")
+        Log.d("MotorController", "listener setup completed")
     }
 
     private fun getSpeedInBounds(newSpeed: Int) : Int {
         var target = newSpeed
-        if(speedCenter > newSpeed) target = speedCenter
-        if(newSpeed > speedCenter + speedOffset) target = speedCenter + speedOffset
+        if(motorCenter > newSpeed) target = motorCenter
+        if(newSpeed > motorCenter + motorOffset) target = motorCenter + motorOffset
         return target
     }
 
     private suspend fun changeSpeed(newSpeed: Int) {
         currentSpeed = newSpeed
-        apiController.getService().postSpeed(Speed(newSpeed))
+        apiController.getService().postMotor(Motor(newSpeed))
         currentSpeedText.text = currentSpeed.toString()
-        Log.d("SpeedController", "changing speed to $newSpeed")
+        Log.d("MotorController", "changing speed to $newSpeed")
     }
 }

@@ -61,8 +61,8 @@ class CarControlActivity : AppCompatActivity() {
         val servoBar = findViewById<SeekBar>(R.id.servoBar)
 
         speedBar.progress = 50
-        post(Speed(constants.speedCenter),
-            apiController.getService()::postSpeed as KSuspendFunction1<HttpBody, PostResponse>)
+        post(Motor(constants.motorCenter),
+            apiController.getService()::postMotor as KSuspendFunction1<HttpBody, PostResponse>)
 
         servoBar.progress = 50
         post(Servo(constants.servoCenter), apiController.getService()::postServo as KSuspendFunction1<HttpBody, PostResponse>)
@@ -70,14 +70,14 @@ class CarControlActivity : AppCompatActivity() {
         // add listener
         val neutralBtn = findViewById<Button>(R.id.neutralBtn)
         neutralBtn.setOnClickListener {
-            post(Speed(constants.speedCenter),
-            apiController.getService()::postSpeed as KSuspendFunction1<HttpBody, PostResponse>)
-            speedBar.progress = mapTo0100(constants.speedCenter, constants.speedCenter, constants.speedOffset)
+            post(Motor(constants.motorCenter),
+            apiController.getService()::postMotor as KSuspendFunction1<HttpBody, PostResponse>)
+            speedBar.progress = mapTo0100(constants.motorCenter, constants.motorCenter, constants.motorOffset)
         }
         speedBar.setOnSeekBarChangeListener(object: BarSlideListener() {
             override fun onProgressChanged(bar: SeekBar?, progress: Int, fromUser: Boolean) {
-                post(Speed(mapToMinMax(progress, constants.speedCenter, constants.speedOffset)),
-                    apiController.getService()::postSpeed as KSuspendFunction1<HttpBody, PostResponse>)
+                post(Motor(mapToMinMax(progress, constants.motorCenter, constants.motorOffset)),
+                    apiController.getService()::postMotor as KSuspendFunction1<HttpBody, PostResponse>)
             }
         })
         servoBar.setOnSeekBarChangeListener(object: BarSlideListener() {
@@ -92,7 +92,7 @@ class CarControlActivity : AppCompatActivity() {
                     post(Servo(mapToMinMax(bar!!.progress, constants.servoCenter, constants.servoOffset)),
                         apiController.getService()::postServo as KSuspendFunction1<HttpBody, PostResponse>
                     )
-                    bar.progress = mapTo0100(constants.speedCenter, constants.speedCenter, constants.speedOffset)
+                    bar.progress = mapTo0100(constants.motorCenter, constants.motorCenter, constants.motorOffset)
                 }
             }
         })
@@ -112,9 +112,9 @@ class CarControlActivity : AppCompatActivity() {
 
     private fun post(body: HttpBody, apiCall: KSuspendFunction1<HttpBody, PostResponse>) {
         // update label
-        if (body is Speed) {
+        if (body is Motor) {
             val speedLabel = findViewById<TextView>(R.id.speedText)
-            speedLabel.text = getString(R.string.label_speed, body.speed.toString())
+            speedLabel.text = getString(R.string.label_speed, body.motor.toString())
         } else if (body is Servo) {
             val servoLabel = findViewById<TextView>(R.id.servoText)
             servoLabel.text = getString(R.string.label_servo, body.servo.toString())

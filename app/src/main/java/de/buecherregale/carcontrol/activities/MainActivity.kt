@@ -61,12 +61,12 @@ class MainActivity : AppCompatActivity() {
         // clear the default strings when entering
         val ipClearer = object : TextEditListener() {
             override fun beforeTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if(ipText.text == getString(R.string.ip_address)) ipText.text = ""
+                if(ipText.text.equals(getString(R.string.ip_address))) ipText.text = ""
             }
         }
         val portClearer = object :TextEditListener() {
             override fun beforeTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if(portText.text == getString(R.string.port)) portText.text = ""
+                if(portText.text.equals(getString(R.string.port))) portText.text = ""
             }
         }
         ipText.addTextChangedListener(ipClearer)
