@@ -49,7 +49,7 @@ class TiltControl : AppCompatActivity() {
             Log.d("Tilt", "initialising speed controller")
             speedController = MotorController(url,  constants,
                 gas=gasBtn, breaking=breakBtn, clutch=clutchBtn, findViewById(R.id.currentSpeedText),
-                100, changePerDelay=constants.motorOffset / 4, breakPerDelay=constants.motorOffset / 2)
+                100, changePerDelay=constants.motorOffset / 40, breakPerDelay=constants.motorOffset / 20)
         }
     }
 }

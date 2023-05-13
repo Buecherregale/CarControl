@@ -18,13 +18,14 @@ class MotorController(url: String, constants: Constants,
 
     private val apiController = RestApiController(url)
 
+    // shorthands
     private val motorCenter: Int = constants.motorCenter
     private val motorOffset: Int = constants.motorOffset
-
     private val motorMin: Int = motorCenter - motorOffset
     private val motorMax: Int = motorCenter + motorOffset
 
-    private var currentSpeed = 0
+    private var currentSpeed = motorCenter
+
 
     private var pressingBreak = false
     private var pressingGas = false
@@ -67,7 +68,7 @@ class MotorController(url: String, constants: Constants,
                             while(isActive) {
                                 delay(delay)
                                 if(currentSpeed > motorCenter) {
-                                    changeSpeed(getSpeedInBounds(currentSpeed - changePerDelay))
+                                    changeSpeed(getSpeedInBounds(currentSpeed - changePerDelay / 2))
                                 }
                             }
                         }
@@ -82,14 +83,14 @@ class MotorController(url: String, constants: Constants,
                 MotionEvent.ACTION_DOWN -> {
                     pressingBreak = true
                     updateJob?.cancel()
-
+                    if(!clutchPressed && currentSpeed <= motorCenter) return@setOnTouchListener true
                     updateJob = CoroutineScope(Dispatchers.Main).launch {
-                        while(isActive) {
+                        while(isActive && !(!clutchPressed && currentSpeed <= motorCenter)) {
                             delay(delay)
                             if(currentSpeed > motorMin) {
                                 var target = currentSpeed - breakPerDelay
-                                if (target < constants.motorCenter - constants.motorOffset) {
-                                    target = constants.motorCenter - constants.motorOffset
+                                if (target < motorCenter - motorOffset) {
+                                    target = motorCenter - motorOffset
                                 }
                                 changeSpeed(target)
                             }
@@ -118,7 +119,7 @@ class MotorController(url: String, constants: Constants,
 
     private fun getSpeedInBounds(newSpeed: Int) : Int {
         var target = newSpeed
-        if(motorCenter > newSpeed) target = motorCenter
+
         if(newSpeed > motorCenter + motorOffset) target = motorCenter + motorOffset
         return target
     }
