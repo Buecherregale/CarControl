@@ -4,12 +4,11 @@ import android.content.Intent
 import android.net.InetAddresses
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.view.View.OnFocusChangeListener
 import android.widget.Button
 import android.widget.TextView
 import com.google.gson.Gson
 import de.buecherregale.carcontrol.R
-import de.buecherregale.carcontrol.listener.TextEditListener
 import java.io.File
 
 
@@ -60,20 +59,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         // clear the default strings when entering
-        val ipClearer = object : TextEditListener() {
-            override fun beforeTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if(ipText.text.equals(getString(R.string.ip_address))) ipText.text = ""
+        ipText.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+            if(!hasFocus) return@OnFocusChangeListener
+            if(ipText.text.toString() == getString(R.string.ip_address)) {
+                ipText.text = ""
             }
         }
-        val portClearer = object :TextEditListener() {
-            override fun beforeTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                Log.d("MAIN", portText.text.toString())
-                Log.d("MAIN", getString(R.string.port))
-                if(portText.text.equals(getString(R.string.port))) portText.text = ""
+        portText.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+            if(!hasFocus) return@OnFocusChangeListener
+            if(portText.text.toString() == getString(R.string.ip_address)) {
+                portText.text = ""
             }
         }
-        ipText.addTextChangedListener(ipClearer)
-        portText.addTextChangedListener(portClearer)
     }
 
     private fun validate(ip: String, port: String) : Boolean {
