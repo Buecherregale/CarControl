@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.InetAddresses
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import com.google.gson.Gson
@@ -66,6 +67,8 @@ class MainActivity : AppCompatActivity() {
         }
         val portClearer = object :TextEditListener() {
             override fun beforeTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                Log.d("MAIN", portText.text.toString())
+                Log.d("MAIN", getString(R.string.port))
                 if(portText.text.equals(getString(R.string.port))) portText.text = ""
             }
         }
