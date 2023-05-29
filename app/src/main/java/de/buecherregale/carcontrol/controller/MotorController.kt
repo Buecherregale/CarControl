@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.util.Log
 import android.view.MotionEvent
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import de.buecherregale.carcontrol.api.Constants
 import de.buecherregale.carcontrol.api.RestApiController
@@ -13,7 +14,7 @@ import kotlinx.coroutines.*
 @SuppressLint("ClickableViewAccessibility")
 class MotorController(url: String, constants: Constants,
                       gas: Button, breaking: Button, clutch: Button,
-                      private val currentSpeedText: TextView,
+                      private val currentSpeedText: TextView, private val progress: ProgressBar,
                       delay: Long, changePerDelay: Int, breakPerDelay: Int) {
 
     private val apiController = RestApiController(url)
@@ -33,6 +34,8 @@ class MotorController(url: String, constants: Constants,
 
     private var updateJob: Job? = null
 
+    private var enabled = true
+
     init {
         Log.d("MotorController", "requesting to: $url")
         Log.d("MotorController", """using: 
@@ -41,6 +44,12 @@ class MotorController(url: String, constants: Constants,
             breakPerDelay: $breakPerDelay
         """.trimIndent())
         Log.d("MotorController", "setting up listener...")
+
+        progress.isIndeterminate = false
+        progress.min = constants.motorMin
+        progress.max = constants.motorMax
+        progress.progress = constants.motorCenter
+
         gas.setOnTouchListener { view, motionEvent ->
              when(motionEvent.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -117,6 +126,10 @@ class MotorController(url: String, constants: Constants,
         Log.d("MotorController", "listener setup completed")
     }
 
+    fun setEnabled(enabled: Boolean) {
+        this.enabled = enabled
+    }
+
     private fun getSpeedInBounds(newSpeed: Int) : Int {
         var target = newSpeed
 
@@ -125,9 +138,14 @@ class MotorController(url: String, constants: Constants,
     }
 
     private suspend fun changeSpeed(newSpeed: Int) {
+        if(!enabled) return
+
         currentSpeed = newSpeed
         apiController.getService().postMotor(Motor(newSpeed))
         currentSpeedText.text = currentSpeed.toString()
+        progress.progress = currentSpeed
+        progress.secondaryProgress = currentSpeed
+        progress.secondaryProgress = currentSpeed
         Log.d("MotorController", "changing speed to $newSpeed")
     }
 }

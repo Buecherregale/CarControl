@@ -1,28 +1,29 @@
 package de.buecherregale.carcontrol.activities
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.hardware.SensorManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.Switch
 import de.buecherregale.carcontrol.R
-import de.buecherregale.carcontrol.api.CarControlService
-import de.buecherregale.carcontrol.api.Constants
 import de.buecherregale.carcontrol.api.RestApiController
 import de.buecherregale.carcontrol.exception.ExceptionHandler
 import de.buecherregale.carcontrol.controller.MotorController
+import de.buecherregale.carcontrol.controller.SteeringController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class TiltControl : AppCompatActivity() {
 
-    private lateinit var apiController: RestApiController
-    private lateinit var service: CarControlService
 
-    private lateinit var constants: Constants
+    private lateinit var motorController: MotorController
+    private lateinit var steeringController: SteeringController
 
-    private lateinit var speedController: MotorController
-
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tilt_control)
@@ -36,8 +37,8 @@ class TiltControl : AppCompatActivity() {
 
         Log.d("API", "connecting to url from intent: $url")
 
-        apiController = RestApiController(RestApiController.buildURL(ip, port))
-        service = apiController.getService()
+        val apiController = RestApiController(RestApiController.buildURL(ip, port))
+        val service = apiController.getService()
 
         val gasBtn = findViewById<Button>(R.id.gas)
         val breakBtn = findViewById<Button>(R.id.breaking)
@@ -45,11 +46,25 @@ class TiltControl : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.Main).launch {
             Log.d("API", "fetching constants")
-            constants = service.getConstants()
-            Log.d("Tilt", "initialising speed controller")
-            speedController = MotorController(url,  constants,
-                gas=gasBtn, breaking=breakBtn, clutch=clutchBtn, findViewById(R.id.currentSpeedText),
+            val constants = service.getConstants()
+
+             motorController = MotorController(url,  constants,
+                gas=gasBtn, breaking=breakBtn, clutch=clutchBtn,
+                 findViewById(R.id.currentSpeedText), findViewById(R.id.currentSpeed),
                 100, changePerDelay=constants.motorOffset / 40, breakPerDelay=constants.motorOffset / 20)
+
+            steeringController = SteeringController(getSystemService(Context.SENSOR_SERVICE) as SensorManager,
+                findViewById(R.id.currentServoText), findViewById(R.id.currentServo),
+                apiController, constants, 50)
+        }
+        // disable components based on switches
+        val tempomat = findViewById<Switch>(R.id.tempomat)
+        tempomat.setOnCheckedChangeListener { _, checked ->
+            motorController.setEnabled(!checked)
+        }
+        val spurhalten = findViewById<Switch>(R.id.spurhalten)
+        spurhalten.setOnCheckedChangeListener { _, checked ->
+            steeringController.setEnabled(!checked)
         }
     }
 }

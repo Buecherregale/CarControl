@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         }
         portText.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
             if(!hasFocus) return@OnFocusChangeListener
-            if(portText.text.toString() == getString(R.string.ip_address)) {
+            if(portText.text.toString() == getString(R.string.port)) {
                 portText.text = ""
             }
         }

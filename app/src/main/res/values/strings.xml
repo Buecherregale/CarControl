@@ -18,4 +18,7 @@
     <string name="breakButton">Break</string>
     <string name="clutchButton">Clutch</string>
     <string name="currentSpeedText">CurrentSpeed</string>
+    <string name="currentServoText">CurrentServo</string>
+    <string name="spurhalten">Spurhalten</string>
+    <string name="tempomat">Tempomat</string>
 </resources>
