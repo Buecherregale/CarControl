@@ -36,68 +36,72 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <ProgressBar
-        android:id="@+id/currentSpeed"
-        style="?android:attr/progressBarStyle"
-        android:indeterminate="false"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginStart="125dp"
-        android:layout_marginTop="75dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ProgressBar
-        android:id="@+id/currentServo"
-        style="?android:attr/progressBarStyle"
-        android:indeterminate="false"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="75dp"
-        android:layout_marginEnd="125dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/currentSpeedText"
-        android:layout_width="150dp"
-        android:layout_height="32dp"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="25dp"
-        android:text="@string/currentSpeedText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/currentServoText"
-        android:layout_width="150dp"
-        android:layout_height="32dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="100dp"
-        android:text="@string/currentServoText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Switch
         android:id="@+id/spurhalten"
-        android:layout_width="153dp"
-        android:layout_height="48dp"
+
+        android:layout_width="150dp"
+        android:layout_height="50dp"
         android:layout_marginStart="300dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="125dp"
+
         android:text="@string/spurhalten"
+        android:textAlignment="viewStart"
+        app:layout_constraintEnd_toStartOf="@+id/currentServo"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/currentSpeed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <Switch
         android:id="@+id/tempomat"
-        android:layout_width="153dp"
-        android:layout_height="48dp"
+
+        android:layout_width="150dp"
+        android:layout_height="50dp"
         android:layout_marginStart="300dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="50dp"
+
         android:text="@string/tempomat"
+        android:textAlignment="viewStart"
+        app:layout_constraintEnd_toStartOf="@+id/currentServo"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/currentSpeed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <de.buecherregale.carcontrol.views.SemiCircleProgressBar
+        android:id="@+id/currentSpeed"
+
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="16dp"
+
+        app:BackStrokeWidth="10dp"
+        app:ForeStrokeWidth="7dp"
+
+        app:Maximum="1500"
+        app:Minimum="1100"
+        app:Progress="1100"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <de.buecherregale.carcontrol.views.SemiCircleProgressBar
+        android:id="@+id/currentServo"
+
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="50dp"
+
+        app:BackStrokeWidth="10dp"
+        app:ForeStrokeWidth="7dp"
+
+        app:Maximum="1500"
+        app:Minimum="1100"
+        app:Progress="1100"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

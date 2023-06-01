@@ -1,5 +1,6 @@
 package de.buecherregale.carcontrol.api
 
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -12,6 +13,9 @@ interface CarControlService {
 
     @GET("car_control/constants")
     suspend fun getConstants() : Constants
+
+    @POST("car_control/lka")
+    suspend fun activateLKA() : Response<Unit>
 
     // no get methods for servo and speed exist
 }

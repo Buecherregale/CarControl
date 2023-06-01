@@ -49,12 +49,12 @@ class TiltControl : AppCompatActivity() {
             val constants = service.getConstants()
 
              motorController = MotorController(url,  constants,
-                gas=gasBtn, breaking=breakBtn, clutch=clutchBtn,
-                 findViewById(R.id.currentSpeedText), findViewById(R.id.currentSpeed),
-                100, changePerDelay=constants.motorOffset / 40, breakPerDelay=constants.motorOffset / 20)
+                gasBtn, breakBtn, clutchBtn,
+                 findViewById(R.id.currentSpeed),
+                delay=100, changePerDelay=constants.motorOffset / 40, breakPerDelay=constants.motorOffset / 8)
 
             steeringController = SteeringController(getSystemService(Context.SENSOR_SERVICE) as SensorManager,
-                findViewById(R.id.currentServoText), findViewById(R.id.currentServo),
+                findViewById(R.id.currentServo),
                 apiController, constants, 50)
         }
         // disable components based on switches
@@ -65,6 +65,9 @@ class TiltControl : AppCompatActivity() {
         val spurhalten = findViewById<Switch>(R.id.spurhalten)
         spurhalten.setOnCheckedChangeListener { _, checked ->
             steeringController.setEnabled(!checked)
+            CoroutineScope(Dispatchers.Main).launch {
+                apiController.getService().activateLKA()
+            }
         }
     }
 }

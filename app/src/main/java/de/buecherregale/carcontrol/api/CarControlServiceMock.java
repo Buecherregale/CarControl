@@ -2,7 +2,10 @@ package de.buecherregale.carcontrol.api;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import kotlin.Unit;
 import kotlin.coroutines.Continuation;
+import retrofit2.Response;
 
 public class CarControlServiceMock implements CarControlService {
     @Nullable
@@ -21,5 +24,11 @@ public class CarControlServiceMock implements CarControlService {
     @Override
     public Object getConstants(@NonNull Continuation<? super Constants> $completion) {
         return new Constants(1100, 400, 1100, 400);
+    }
+
+    @Nullable
+    @Override
+    public Object activateLKA(@NonNull Continuation<? super Response<Unit>> $completion) {
+        return null;
     }
 }

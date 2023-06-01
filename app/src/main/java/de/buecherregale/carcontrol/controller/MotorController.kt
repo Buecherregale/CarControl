@@ -4,17 +4,16 @@ import android.annotation.SuppressLint
 import android.util.Log
 import android.view.MotionEvent
 import android.widget.Button
-import android.widget.ProgressBar
-import android.widget.TextView
 import de.buecherregale.carcontrol.api.Constants
 import de.buecherregale.carcontrol.api.RestApiController
 import de.buecherregale.carcontrol.api.Motor
+import de.buecherregale.carcontrol.views.SemiCircleProgressBar
 import kotlinx.coroutines.*
 
 @SuppressLint("ClickableViewAccessibility")
 class MotorController(url: String, constants: Constants,
                       gas: Button, breaking: Button, clutch: Button,
-                      private val currentSpeedText: TextView, private val progress: ProgressBar,
+                      private val progress: SemiCircleProgressBar,
                       delay: Long, changePerDelay: Int, breakPerDelay: Int) {
 
     private val apiController = RestApiController(url)
@@ -45,7 +44,6 @@ class MotorController(url: String, constants: Constants,
         """.trimIndent())
         Log.d("MotorController", "setting up listener...")
 
-        progress.isIndeterminate = false
         progress.min = constants.motorMin
         progress.max = constants.motorMax
         progress.progress = constants.motorCenter
@@ -142,10 +140,7 @@ class MotorController(url: String, constants: Constants,
 
         currentSpeed = newSpeed
         apiController.getService().postMotor(Motor(newSpeed))
-        currentSpeedText.text = currentSpeed.toString()
         progress.progress = currentSpeed
-        progress.secondaryProgress = currentSpeed
-        progress.secondaryProgress = currentSpeed
         Log.d("MotorController", "changing speed to $newSpeed")
     }
 }

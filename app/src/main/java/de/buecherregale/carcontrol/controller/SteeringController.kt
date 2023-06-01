@@ -5,17 +5,16 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.util.Log
-import android.widget.ProgressBar
-import android.widget.TextView
 import de.buecherregale.carcontrol.api.Constants
 import de.buecherregale.carcontrol.api.RestApiController
 import de.buecherregale.carcontrol.api.Servo
+import de.buecherregale.carcontrol.views.SemiCircleProgressBar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
-class SteeringController(sensorManager: SensorManager, private val currentServoText: TextView, private val progress: ProgressBar, private val apiController: RestApiController, private val constants: Constants, private val tolerance: Int): SensorEventListener {
+class SteeringController(sensorManager: SensorManager, private val progress: SemiCircleProgressBar, private val apiController: RestApiController, private val constants: Constants, private val tolerance: Int): SensorEventListener {
 
     private val accelerometerReading = FloatArray(3)
     private val magnetometerReading = FloatArray(3)
@@ -31,7 +30,6 @@ class SteeringController(sensorManager: SensorManager, private val currentServoT
         Log.d("Steering Controller", "Init SteeringController")
         Log.d("Steering Controller", "Using tolerance $tolerance")
 
-        progress.isIndeterminate = false
         progress.min = constants.servoMin
         progress.max = constants.servoMax
         progress.progress = constants.servoCenter
@@ -69,7 +67,6 @@ class SteeringController(sensorManager: SensorManager, private val currentServoT
         val servo: Int = mapOrientationToServo(accelerometerReading[1])
         if(abs(servo - currentServo) > tolerance) {
             currentServo = servo
-            currentServoText.text = servo.toString()
             CoroutineScope(Dispatchers.Main).launch {
                 apiController.getService().postServo(Servo(servo))
             }
@@ -82,7 +79,6 @@ class SteeringController(sensorManager: SensorManager, private val currentServoT
 
     fun setEnabled(enabled: Boolean) {
         currentServo = constants.servoCenter
-        currentServoText.text = constants.servoCenter.toString()
         CoroutineScope(Dispatchers.Main).launch {
             apiController.getService().postServo(Servo(constants.servoCenter))
         }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomSemiCircle">
+        <attr name="SemiCircleStrokeWidth" format="dimension"/>
+        <attr name="SemiCircleFrontColor" format="color" />
+        <attr name="SemiCircleBackColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="SemiCircleProgressBar">
+        <attr name="Minimum" format="integer" />
+        <attr name="Maximum" format="integer" />
+        <attr name="Progress" format="integer" />
+        <attr name="BackgroundColor" format="color" />
+        <attr name="ForegroundColor" format="color" />
+        <attr name="BackStrokeWidth" format="dimension" />
+        <attr name="ForeStrokeWidth" format="dimension" />
+    </declare-styleable>
+</resources>
