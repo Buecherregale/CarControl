@@ -1,18 +1,21 @@
-package de.buecherregale.carcontrol
+package de.buecherregale.carcontrol.activities
 
 import android.content.Intent
 import android.net.InetAddresses
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View.OnFocusChangeListener
 import android.widget.Button
 import android.widget.TextView
 import com.google.gson.Gson
-import de.buecherregale.carcontrol.listener.TextEditListener
+import de.buecherregale.carcontrol.R
 import java.io.File
 
-data class Config(val ip: String, val port: Int)
+
 
 class MainActivity : AppCompatActivity() {
+
+    data class Config(val ip: String, val port: Int)
 
     private val cfgName: String = "cfg.json"
 
@@ -47,27 +50,27 @@ class MainActivity : AppCompatActivity() {
             // validation
             if(validate(ip, port)) {
                 writeCfg(ip, port.toInt())
+                // open next activity
+                val intent = Intent(this, TiltControl::class.java)
+                intent.putExtra("ip", ip)
+                intent.putExtra("port", port)
+                startActivity(intent)
             }
-            // open next activity
-            val intent = Intent(this, CarControlActivity::class.java)
-            intent.putExtra("ip", ip)
-            intent.putExtra("port", port)
-            startActivity(intent)
         }
 
         // clear the default strings when entering
-        val ipClearer = object : TextEditListener() {
-            override fun beforeTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if(ipText.text == getString(R.string.ip_address)) ipText.text = ""
+        ipText.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+            if(!hasFocus) return@OnFocusChangeListener
+            if(ipText.text.toString() == getString(R.string.ip_address)) {
+                ipText.text = ""
             }
         }
-        val portClearer = object :TextEditListener() {
-            override fun beforeTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if(portText.text == getString(R.string.port)) portText.text = ""
+        portText.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+            if(!hasFocus) return@OnFocusChangeListener
+            if(portText.text.toString() == getString(R.string.port)) {
+                portText.text = ""
             }
         }
-        ipText.addTextChangedListener(ipClearer)
-        portText.addTextChangedListener(portClearer)
     }
 
     private fun validate(ip: String, port: String) : Boolean {

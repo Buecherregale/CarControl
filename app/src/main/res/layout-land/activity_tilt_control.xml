@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.TiltControl">
+
+    <Button
+        android:id="@+id/gas"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="32dp"
+        android:text="@string/gasButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/breaking"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        android:text="@string/breakButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/clutch"
+        android:layout_width="95dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="212dp"
+        android:layout_marginBottom="32dp"
+        android:text="@string/clutchButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Switch
+        android:id="@+id/spurhalten"
+
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="300dp"
+        android:layout_marginTop="125dp"
+
+        android:text="@string/spurhalten"
+        android:textAlignment="viewStart"
+        app:layout_constraintEnd_toStartOf="@+id/currentServo"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/currentSpeed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <Switch
+        android:id="@+id/tempomat"
+
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="300dp"
+        android:layout_marginTop="50dp"
+
+        android:text="@string/tempomat"
+        android:textAlignment="viewStart"
+        app:layout_constraintEnd_toStartOf="@+id/currentServo"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/currentSpeed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <de.buecherregale.carcontrol.views.SemiCircleProgressBar
+        android:id="@+id/currentSpeed"
+
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="16dp"
+
+        app:BackStrokeWidth="10dp"
+        app:ForeStrokeWidth="7dp"
+
+        app:Maximum="1500"
+        app:Minimum="1100"
+        app:Progress="1100"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <de.buecherregale.carcontrol.views.SemiCircleProgressBar
+        android:id="@+id/currentServo"
+
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="50dp"
+
+        app:BackStrokeWidth="10dp"
+        app:ForeStrokeWidth="7dp"
+
+        app:Maximum="1500"
+        app:Minimum="1100"
+        app:Progress="1100"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

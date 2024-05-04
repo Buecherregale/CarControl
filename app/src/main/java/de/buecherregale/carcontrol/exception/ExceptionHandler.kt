@@ -1,6 +1,7 @@
 package de.buecherregale.carcontrol.exception
 
 import android.app.Activity
+import android.util.Log
 import android.widget.TextView
 import de.buecherregale.carcontrol.R
 import java.lang.Thread.UncaughtExceptionHandler
@@ -15,9 +16,6 @@ class ExceptionHandler(private val activity: Activity): UncaughtExceptionHandler
         errorWriter.append("Type of Exception: ${throwable.javaClass.simpleName}$endl")
         throwable.printStackTrace()
 
-        val errorLabel = activity.findViewById<TextView>(R.id.errorLabel)
-        errorLabel.text = throwable.message
-
-        println(errorWriter)
+        Log.d("App", "handled error: \n$errorWriter")
     }
 }
