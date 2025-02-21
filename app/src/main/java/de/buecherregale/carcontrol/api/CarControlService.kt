@@ -6,16 +6,21 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface CarControlService {
-    @POST("car_control/motor/{value}")
-    suspend fun postMotor(@Path("value") motor: Motor) : PostResponse
-    @POST("car_control/servo")
-    suspend fun postServo(@Path("value") servo: Servo) : PostResponse
+    @POST("drive/motor/{value}")
+    suspend fun postMotor(@Path("value") motor: Int) : PostResponse
 
-    @GET("car_control/constants")
+    @POST("drive/servo/{value}")
+    suspend fun postServo(@Path("value") servo: Int) : PostResponse
+
+    @GET("drive/constants")
     suspend fun getConstants() : Constants
 
-    @POST("car_control/lka")
+    @POST("drive/lka")
     suspend fun activateLKA() : Response<Unit>
 
-    // no get methods for servo and speed exist
+    @GET("drive/speed")
+    suspend fun getSpeed() : Int
+    @GET("drive/servo")
+    suspend fun getServo() : Int
+
 }

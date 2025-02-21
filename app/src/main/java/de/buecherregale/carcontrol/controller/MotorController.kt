@@ -6,7 +6,6 @@ import android.view.MotionEvent
 import android.widget.Button
 import de.buecherregale.carcontrol.api.Constants
 import de.buecherregale.carcontrol.api.RestApiController
-import de.buecherregale.carcontrol.api.Motor
 import de.buecherregale.carcontrol.views.SemiCircleProgressBar
 import kotlinx.coroutines.*
 
@@ -139,7 +138,7 @@ class MotorController(url: String, constants: Constants,
         if(!enabled) return
 
         currentSpeed = newSpeed
-        apiController.getService().postMotor(Motor(newSpeed))
+        apiController.getService().postMotor(newSpeed)
         progress.progress = currentSpeed
         Log.d("MotorController", "changing speed to $newSpeed")
     }

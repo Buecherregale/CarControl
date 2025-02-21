@@ -7,7 +7,6 @@ import android.hardware.SensorManager
 import android.util.Log
 import de.buecherregale.carcontrol.api.Constants
 import de.buecherregale.carcontrol.api.RestApiController
-import de.buecherregale.carcontrol.api.Servo
 import de.buecherregale.carcontrol.views.SemiCircleProgressBar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -68,7 +67,7 @@ class SteeringController(sensorManager: SensorManager, private val progress: Sem
         if(abs(servo - currentServo) > tolerance) {
             currentServo = servo
             CoroutineScope(Dispatchers.Main).launch {
-                apiController.getService().postServo(Servo(servo))
+                apiController.getService().postServo(servo)
             }
             progress.progress = servo
         }
@@ -80,7 +79,7 @@ class SteeringController(sensorManager: SensorManager, private val progress: Sem
     fun setEnabled(enabled: Boolean) {
         currentServo = constants.servoCenter
         CoroutineScope(Dispatchers.Main).launch {
-            apiController.getService().postServo(Servo(constants.servoCenter))
+            apiController.getService().postServo(constants.servoCenter)
         }
         progress.progress = constants.servoCenter
         this.enabled = enabled
