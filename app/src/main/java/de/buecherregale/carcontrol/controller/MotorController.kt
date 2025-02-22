@@ -6,7 +6,6 @@ import android.view.MotionEvent
 import android.widget.Button
 import de.buecherregale.carcontrol.api.Constants
 import de.buecherregale.carcontrol.api.RestApiController
-import de.buecherregale.carcontrol.api.Motor
 import de.buecherregale.carcontrol.views.SemiCircleProgressBar
 import kotlinx.coroutines.*
 
@@ -21,8 +20,6 @@ class MotorController(url: String, constants: Constants,
     // shorthands
     private val motorCenter: Int = constants.motorCenter
     private val motorOffset: Int = constants.motorOffset
-    private val motorMin: Int = motorCenter - motorOffset
-    private val motorMax: Int = motorCenter + motorOffset
 
     private var currentSpeed = motorCenter
 
@@ -58,7 +55,7 @@ class MotorController(url: String, constants: Constants,
                         updateJob = CoroutineScope(Dispatchers.Main).launch {
                             while(isActive) {
                                 delay(delay)
-                                if(currentSpeed < motorMax) {
+                                if(currentSpeed < constants.motorMax) {
                                     changeSpeed(getSpeedInBounds(currentSpeed + changePerDelay))
                                 }
                             }
@@ -94,7 +91,7 @@ class MotorController(url: String, constants: Constants,
                     updateJob = CoroutineScope(Dispatchers.Main).launch {
                         while(isActive && !(!clutchPressed && currentSpeed <= motorCenter)) {
                             delay(delay)
-                            if(currentSpeed > motorMin) {
+                            if(currentSpeed > constants.motorMin) {
                                 var target = currentSpeed - breakPerDelay
                                 if (target < motorCenter - motorOffset) {
                                     target = motorCenter - motorOffset
@@ -139,7 +136,7 @@ class MotorController(url: String, constants: Constants,
         if(!enabled) return
 
         currentSpeed = newSpeed
-        apiController.getService().postMotor(Motor(newSpeed))
+        apiController.getService().postMotor(newSpeed)
         progress.progress = currentSpeed
         Log.d("MotorController", "changing speed to $newSpeed")
     }
